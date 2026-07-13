@@ -11,7 +11,12 @@ module "budgets" {
   }
 }
 
-# Task 4: dns module — added after bootstrap apply + registrar NS gate
+# Task 4: dns module
+module "dns" {
+  source      = "./modules/dns"
+  domain_name = var.domain_name
+}
+
 # Task 5: certificate module — added after NS propagation confirmed
 # Task 7: site module — added after cert reaches ISSUED
 # Task 8: github-oidc module
