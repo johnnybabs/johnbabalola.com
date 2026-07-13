@@ -1,0 +1,13 @@
+compact: true
+output:
+  - cli
+framework:
+  - terraform
+  - terraform_plan
+directory:
+  - infra
+
+# Skipped checks must be documented here with a reason and a corresponding
+# entry in docs/security-exceptions.md before being added.
+# skip-check:
+#   - CKV_AWS_XXXX  # reason: ...
