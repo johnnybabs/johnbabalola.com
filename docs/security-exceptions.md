@@ -136,6 +136,24 @@ monitoring). Tier 3 for state and log buckets.
 
 ---
 
+## EXC-011: DNSSEC not enabled on Route 53 hosted zone (CKV2_AWS_38)
+
+**Requirement:** CKV2_AWS_38 — Route 53 hosted zone should have DNSSEC signing enabled.
+**Reason:** DNSSEC requires a DS (Delegation Signer) record to be set at the domain registrar
+on top of a delegation that is currently being newly established. A mismatched or prematurely
+set DS record makes the entire domain unresolvable for the duration of the DS record's TTL at
+the parent zone. Enabling DNSSEC before the NS delegation is proven stable is an availability
+risk that outweighs the integrity benefit during initial cutover. This is an explicit
+availability-over-integrity trade-off, not a cost or complexity decision.
+Implementation path: once the site is live, the NS delegation is confirmed stable, and Sprint 2
+is complete, add `aws_route53_key_signing_key` and `aws_route53_hosted_zone_dnssec` to the dns
+module, then add the DS record at the registrar.
+**Tier:** 2 (DNSSEC is a legitimate production control; deliberately deferred, not permanently skipped).
+**Checkov skip:** `#checkov:skip=CKV2_AWS_38` inline in `infra/modules/dns/main.tf`.
+**Expiry:** Post Sprint 2 (once NS delegation is proven stable and site is live). Target: 2026-08-31.
+
+---
+
 ## Adding a new exception
 
 Copy the template below. Do NOT merge a PR that adds a `skip-check` to

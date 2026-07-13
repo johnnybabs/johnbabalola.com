@@ -15,6 +15,11 @@ module "budgets" {
 module "dns" {
   source      = "./modules/dns"
   domain_name = var.domain_name
+
+  providers = {
+    aws           = aws
+    aws.us_east_1 = aws.us_east_1
+  }
 }
 
 # Task 5: certificate module — added after NS propagation confirmed

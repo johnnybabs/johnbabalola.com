@@ -5,6 +5,18 @@ were meaningfully considered or if the decision has cost/security consequences.
 
 ---
 
+## 2026-07-13: DNSSEC deferred until NS delegation is proven stable (EXC-011)
+
+DNSSEC signing on a freshly delegated zone requires a DS record at the registrar. Setting
+a DS record before verifying the NS delegation works is an availability risk: a mismatched
+DS record makes the domain unresolvable. The decision is to defer DNSSEC until after Sprint 2,
+once `dig NS johnbabalola.com` is stable and the site is confirmed live. Revisit date: 2026-08-31.
+This is an availability-over-integrity trade-off, documented in EXC-011.
+
+Owner: John.
+
+---
+
 ## 2026-07-13: DNS module applied before PR merge — process incident and rule
 
 **What happened:** The Task 4 PR (task/4-dns, PR #7) was created and the `terraform apply -target=module.dns` was run in the same step, before John had reviewed or merged the PR. The stated reason was that the zone must exist to surface NS records before the cert module can validate — which is technically true. The error was not flagging this in advance or framing it as an explicit exception in the PR description at the time of creation.
