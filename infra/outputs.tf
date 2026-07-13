@@ -1,3 +1,6 @@
-# Module outputs are wired here as each Terraform module is applied.
-# Populated during Tasks 4-8; this file exists at scaffold to satisfy
-# terraform validate with -backend=false.
+output "budget_sns_topic_arn" {
+  description = "SNS topic ARN for budget alerts. Confirm the email subscription AWS sends to baabalola@gmail.com."
+  value       = module.budgets.sns_topic_arn
+}
+
+# Further outputs added as modules are wired in (Tasks 4-8).
