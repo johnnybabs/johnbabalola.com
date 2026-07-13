@@ -22,6 +22,17 @@ module "dns" {
   }
 }
 
-# Task 5: certificate module — added after NS propagation confirmed
+# Task 5: certificate module — ACM in us-east-1, DNS-validated via the dns zone
+module "certificate" {
+  source      = "./modules/certificate"
+  domain_name = var.domain_name
+  zone_id     = module.dns.zone_id
+
+  providers = {
+    aws           = aws
+    aws.us_east_1 = aws.us_east_1
+  }
+}
+
 # Task 7: site module — added after cert reaches ISSUED
 # Task 8: github-oidc module
