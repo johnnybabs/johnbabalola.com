@@ -13,4 +13,9 @@ output "zone_id" {
   value       = module.dns.zone_id
 }
 
-# Further outputs added as modules are wired in (Tasks 5, 7, 8).
+output "certificate_arn" {
+  description = "Validated ACM certificate ARN (us-east-1) for the CloudFront distribution."
+  value       = module.certificate.certificate_arn
+}
+
+# Further outputs added as modules are wired in (Tasks 7, 8).
