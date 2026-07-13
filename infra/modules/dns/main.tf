@@ -11,7 +11,8 @@ resource "aws_route53_zone" "main" {
 # --------------------------------------------------------------------------
 
 resource "aws_cloudwatch_log_group" "route53_query" {
-  #checkov:skip=CKV_AWS_338:AWS-managed encryption is the Tier 2 lab baseline; CMK demonstrated in Project C per DevSecOps standard. See EXC-008.
+  #checkov:skip=CKV_AWS_158:CloudWatch Logs are encrypted at rest with an AWS-owned key by default; a customer-managed CMK is the Tier 2 lab baseline (demonstrated in Project C). DNS query logs contain no secrets. See EXC-012.
+  #checkov:skip=CKV_AWS_338:7-day retention is the deliberate lab standard per DevSecOps standards (Project D rule); 1 year of DNS query logs has no value here and adds cost. See EXC-013.
   provider          = aws.us_east_1
   name              = "/aws/route53/${var.domain_name}"
   retention_in_days = 7

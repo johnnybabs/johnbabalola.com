@@ -154,6 +154,38 @@ module, then add the DS record at the registrar.
 
 ---
 
+## EXC-012: CloudWatch log group uses AWS-owned key, not CMK (CKV_AWS_158)
+
+**Requirement:** CKV_AWS_158 — CloudWatch Log Group encrypted with a customer-managed KMS key.
+**Reason:** CloudWatch Logs are always encrypted at rest; without an explicit `kms_key_id` they
+use an AWS-owned key. A customer-managed CMK is the Tier 2 lab baseline per
+`02_DevSecOps_Engineering_Standards.md` ("AWS-managed keys are the lab baseline"), with the CMK
+pattern demonstrated once in Project C. The Route 53 query log group holds DNS query metadata
+only (no secrets, no PII); a CMK would add ~$1/month plus a key policy for the CloudWatch Logs
+service principal with no meaningful security gain here. Same rationale as EXC-007/EXC-008.
+**Tier:** 2 (demonstrated in Project C; lab baseline acceptable here).
+**Checkov skip:** `#checkov:skip=CKV_AWS_158` in `infra/modules/dns/main.tf`.
+**Expiry:** 2027-07-13.
+
+**Note:** this replaces an earlier incorrect skip of `CKV_AWS_338` (log retention) on the same
+resource, which was the wrong check ID for the KMS finding and did not suppress it.
+
+---
+
+## EXC-013: CloudWatch log group retains logs for 7 days, not 1 year (CKV_AWS_338)
+
+**Requirement:** CKV_AWS_338 — CloudWatch log groups should retain logs for at least 1 year.
+**Reason:** 7-day retention is the deliberate lab standard set in
+`02_DevSecOps_Engineering_Standards.md` ("7-day CloudWatch retention is already the Project D
+rule"). The Route 53 query log exists to demonstrate DNS observability, not for long-term
+forensic retention; a year of query logs adds storage cost with no operational value at
+portfolio scale. This is a cost decision, consistent with the log-retention-from-day-one rule.
+**Tier:** 3 (documented design — deliberate deviation from the check's 1-year default).
+**Checkov skip:** `#checkov:skip=CKV_AWS_338` in `infra/modules/dns/main.tf`.
+**Expiry:** 2027-07-13.
+
+---
+
 ## Adding a new exception
 
 Copy the template below. Do NOT merge a PR that adds a `skip-check` to

@@ -1,6 +1,13 @@
-.PHONY: init plan apply deploy destroy lint fmt validate test
+.PHONY: dev-setup init plan apply deploy destroy lint fmt validate test
 
 TERRAFORM_DIR := infra
+
+# Install pre-commit and wire it into the local git hooks so lint runs
+# before every commit. Run this once after cloning.
+dev-setup:
+	pip install --user pre-commit || pipx install pre-commit
+	pre-commit install
+	@echo "pre-commit installed. Hooks will run on every commit."
 
 init:
 	cd $(TERRAFORM_DIR) && terraform init
