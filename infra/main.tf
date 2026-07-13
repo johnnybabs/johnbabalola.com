@@ -34,5 +34,17 @@ module "certificate" {
   }
 }
 
-# Task 7: site module — added after cert reaches ISSUED
-# Task 8: github-oidc module
+# Task 7: site module — S3 (private, OAC) + CloudFront + security headers + alias records
+module "site" {
+  source          = "./modules/site"
+  domain_name     = var.domain_name
+  zone_id         = module.dns.zone_id
+  certificate_arn = module.certificate.certificate_arn
+}
+
+# Task 8: github-oidc module — OIDC provider + least-privilege deploy role
+module "github_oidc" {
+  source           = "./modules/github-oidc"
+  bucket_arn       = module.site.bucket_arn
+  distribution_arn = module.site.distribution_arn
+}

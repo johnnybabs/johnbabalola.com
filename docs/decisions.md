@@ -5,6 +5,23 @@ were meaningfully considered or if the decision has cost/security consequences.
 
 ---
 
+## 2026-07-13: PRs #9-#14 merged out of sequence; site/oidc recovered to main before apply
+
+PRs #9 through #14 were merged in no particular order without waiting for the stacked PRs to
+retarget or for post-retarget CI review. Consequence: the two stacked PRs (#12 site, #13
+github-oidc) merged into their base branches (`task/5-certificate`, `task/7-site`) instead of
+`main`, because they were merged before GitHub retargeted them — so the site and github-oidc
+modules never reached `main`. No AWS apply had run, so nothing was misconfigured; the gate held.
+Recovery: a fresh branch off `main` brought the site and github-oidc modules across (docs already
+on main left untouched), verified retroactively with `pre-commit run --all-files` and a full
+`terraform plan` on the recovered tree before any apply, confirming private-bucket BPA, CloudFront
+TLSv1.2_2021, apex+www aliases, and the OIDC trust pin. Lesson: merge stacked PRs bottom-up and
+let each retarget to main before merging the next.
+
+Owner: John (merge sequence); Claude Code (recovery).
+
+---
+
 ## 2026-07-13: AWS provider 6.x migration deferred; Dependabot ignores major bumps
 
 Dependabot opened a PR bumping the AWS provider from 5.100.0 to 6.54.0. The repo pins
