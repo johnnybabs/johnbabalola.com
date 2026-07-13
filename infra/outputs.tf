@@ -18,4 +18,19 @@ output "certificate_arn" {
   value       = module.certificate.certificate_arn
 }
 
-# Further outputs added as modules are wired in (Tasks 7, 8).
+output "site_bucket_id" {
+  description = "Origin S3 bucket name, for s3 sync in the deploy pipeline."
+  value       = module.site.bucket_id
+}
+
+output "cloudfront_distribution_id" {
+  description = "CloudFront distribution ID, for cache invalidation in the pipeline."
+  value       = module.site.distribution_id
+}
+
+output "cloudfront_domain_name" {
+  description = "CloudFront domain name (the edge endpoint behind the apex alias)."
+  value       = module.site.distribution_domain_name
+}
+
+# Further outputs added as modules are wired in (Task 8).

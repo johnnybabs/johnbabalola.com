@@ -186,6 +186,39 @@ portfolio scale. This is a cost decision, consistent with the log-retention-from
 
 ---
 
+## EXC-014: Access logging not enabled on the origin bucket or CloudFront (CKV_AWS_18, CKV_AWS_86)
+
+**Requirement:** CKV_AWS_18 (S3 server access logging) and CKV_AWS_86 (CloudFront access logging).
+**Reason:** The origin bucket is reachable only through CloudFront Origin Access Control, so there
+is no direct S3 access to log — S3 server access logging would capture only the CloudFront OAC
+reads. CloudFront standard/access logging is explicitly a v1 backlog item in `PRD.md` section 3
+("analytics: CloudFront standard logs are enough" — deferred). Legacy CloudFront standard logging
+also requires an ACL-enabled log bucket, which conflicts with the account-level Block Public
+Access baseline. When logging is added post-v1, it will use CloudFront logging v2 (to CloudWatch
+or Firehose), which does not require bucket ACLs.
+**Tier:** 2 (legitimate observability control, deliberately deferred to post-v1).
+**Checkov skip:** `#checkov:skip=CKV_AWS_18` in `infra/modules/site/s3.tf`;
+`#checkov:skip=CKV_AWS_86` in `infra/modules/site/cloudfront.tf`.
+**Expiry:** 2027-07-13 (or when analytics is pulled off the v1 backlog, whichever first).
+
+---
+
+## EXC-015: CloudFront geo restriction and origin failover not configured (CKV_AWS_374, CKV_AWS_310)
+
+**Requirement:** CKV_AWS_374 (geo restriction enabled) and CKV_AWS_310 (origin failover configured).
+**Reason:** Both checks are inappropriate for a globally-public, single-origin static portfolio.
+Geo restriction is deliberately `none`: the site's entire purpose is to be reachable by
+recruiters and hiring managers anywhere, so restricting by geography would defeat it. Origin
+failover requires a second origin and an origin group; there is one S3 origin, the content is
+rebuilt from the git repository on every deploy, and there is no availability SLA that would
+justify a standby origin at portfolio scale.
+**Tier:** 3 (documented design — not applicable to this architecture).
+**Checkov skip:** `#checkov:skip=CKV_AWS_374` and `#checkov:skip=CKV_AWS_310` in
+`infra/modules/site/cloudfront.tf`.
+**Expiry:** 2027-07-13.
+
+---
+
 ## Adding a new exception
 
 Copy the template below. Do NOT merge a PR that adds a `skip-check` to
