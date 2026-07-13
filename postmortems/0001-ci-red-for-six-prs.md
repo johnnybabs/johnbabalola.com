@@ -1,4 +1,4 @@
-# Postmortem 0001: Five PRs merged into main with a red CI check
+# Postmortem 0001: Six PRs merged into main with a red CI check
 
 - **Date of incident:** 2026-07-13
 - **Date of postmortem:** 2026-07-13
@@ -15,13 +15,14 @@ root cause, resolution, and action items.
 
 ## Summary
 
-During Sprint 1, the five foundational pull requests (#1 through #5) were each
-squash-merged into `main` while the repository's only CI check — the
-`Lint and Validate` job ("Pre-commit, Terraform validate, Gitleaks") — was
-failing. The check had in fact **never passed since the repository was created**.
-A sixth PR (#7, the DNS module) later merged red as well, before the gap was
-noticed, which confirmed the controls were still absent rather than the misses
-being one-off slips.
+During Sprint 1, six pull requests were squash-merged into `main` while the
+repository's only CI check — the `Lint and Validate` job ("Pre-commit, Terraform
+validate, Gitleaks") — was failing. Five were the foundational Sprint 1 PRs
+(#1 through #5), merged in a single reconciliation batch; the sixth was the DNS
+module (#7), merged later before the gap was noticed. The check had in fact
+**never passed since the repository was created**, so every one of the six went
+in red. That the sixth merged the same way after the first five confirmed the
+controls were genuinely absent, rather than the misses being one-off slips.
 
 No infrastructure was misconfigured as a result: every merged change had been
 `terraform validate`-d and `plan`-reviewed by hand before apply, and the failures
@@ -60,7 +61,7 @@ been reading the Actions tab. That absence of detection is itself a finding
 | ~15:10 | Owner asks why the lint action keeps failing. Investigation begins. |
 | 15:25 | Fix PR (#8) opened after reproducing every failure locally; first-ever green CI run recorded (`conclusion: success`). |
 | 15:41 | Fix PR #8 merged; `main` is green. |
-| 15:xx | Branch protection enabled on `main` requiring the check; this postmortem written. |
+| ~15:45 | Branch protection enabled on `main` requiring the check; this postmortem written. |
 
 ## Root cause
 
@@ -100,7 +101,7 @@ GitHub API and the red check was simply ignored, silently.
 
 ### 3. The self-review checklist was ticked without being run
 
-Each of the five PRs carried a self-review checklist that included
+Each of the six PRs carried a self-review checklist that included
 "`make lint` passes locally (pre-commit: fmt, validate, tflint, gitleaks,
 checkov)". That box was ticked on every PR. It was not true on any of them —
 `make lint` had never been run, because `pre-commit` was not installed. A
