@@ -5,8 +5,9 @@ function handler(event) {
     // Redirect www.<domain> to the apex, preserving path and query string.
     if (host.startsWith('www.')) {
         var apex = host.slice(4);
-        var qs = request.querystring
-            ? '?' + Object.keys(request.querystring).map(function (k) {
+        var keys = Object.keys(request.querystring);
+        var qs = keys.length
+            ? '?' + keys.map(function (k) {
                 return k + '=' + request.querystring[k].value;
             }).join('&')
             : '';

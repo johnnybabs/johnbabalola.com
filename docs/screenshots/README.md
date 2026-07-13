@@ -7,13 +7,15 @@ permanent record.
 | File | What it shows | Captured |
 |---|---|---|
 | `sprint1-first-green-required-check.png` | The first-ever green run of the required `Pre-commit, Terraform validate, Gitleaks` check (PR #8), after the CI-red incident was fixed. Evidence for postmortem 0001 and the case study. | 2026-07-13 |
+| `sprint1-apex-live.png` | `https://johnbabalola.com` serving the placeholder over TLS. | 2026-07-13 |
+| `sprint1-ssllabs-grade.png` | SSL Labs report showing grade **A+** across CloudFront endpoints (exceeds the A target). | 2026-07-13 |
+| `sprint1-security-headers.txt` | `curl -I` output: HSTS, X-Content-Type-Options, X-Frame-Options present. | 2026-07-13 |
+| `sprint1-www-redirect.txt` | `curl -I` output: `www` → apex 301. | 2026-07-13 |
 
-## Still to capture (Sprint 1 DoD — after the site module is applied)
+## Known minor issue (fix queued in the Task 9 PR)
 
-These require the CloudFront distribution to be live, so they are taken once
-PRs #11/#12 are merged and `module.site` is applied:
-
-- `sprint1-apex-https.png` — `https://johnbabalola.com` served with valid TLS (padlock, cert detail showing the ACM cert).
-- `sprint1-www-redirect.png` — `https://www.johnbabalola.com` redirecting to the apex.
-- `sprint1-security-headers.png` — response headers (`curl -I`) showing HSTS, `X-Content-Type-Options`, `X-Frame-Options`.
-- `sprint1-ssllabs-grade.png` — SSL Labs grade A for the apex.
+The `www` redirect currently appends a bare `?` (`https://johnbabalola.com/?`) when
+there is no query string, because the CloudFront function treated the always-present
+querystring object as truthy. Fixed in `infra/modules/site/functions/www-redirect.js`
+(check `keys.length`); applied after the Task 9 PR merges. Functionally the redirect
+works; this is cosmetic.
