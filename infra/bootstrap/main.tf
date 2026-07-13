@@ -45,6 +45,37 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "state_logs" {
 }
 
 # Grants the S3 log-delivery service permission to write; scoped to this account.
+resource "aws_s3_bucket_versioning" "state_logs" {
+  bucket = aws_s3_bucket.state_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "state_logs" {
+  bucket = aws_s3_bucket.state_logs.id
+
+  rule {
+    id     = "log-retention"
+    status = "Enabled"
+
+    filter {}
+
+    expiration {
+      days = 90
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "state_logs" {
   bucket     = aws_s3_bucket.state_logs.id
   depends_on = [aws_s3_bucket_public_access_block.state_logs]
