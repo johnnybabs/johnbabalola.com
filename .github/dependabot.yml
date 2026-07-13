@@ -19,3 +19,9 @@ updates:
       prefix: "chore(deps)"
     labels:
       - "dependencies"
+    ignore:
+      # AWS provider major-version bumps (e.g. 5.x -> 6.x) are breaking changes
+      # handled deliberately as a planned migration, not an automated weekly PR.
+      # See docs/decisions.md (2026-07-13). Minor and patch 5.x updates still flow.
+      - dependency-name: "hashicorp/aws"
+        update-types: ["version-update:semver-major"]
