@@ -3,6 +3,10 @@
 resource "aws_sns_topic" "budget_alerts" {
   provider = aws.us_east_1
   name     = "${var.name_prefix}-budget-alerts"
+  # CKV_AWS_26 fix: encrypt topic with the AWS-managed SNS key.
+  # Using alias/aws/sns (not a CMK) because Budget publishes to SNS;
+  # CMK would require adding budgets.amazonaws.com to the key policy.
+  kms_master_key_id = "alias/aws/sns"
 }
 
 # Allow AWS Budgets service to publish to this topic.
