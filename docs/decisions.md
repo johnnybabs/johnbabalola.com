@@ -5,6 +5,22 @@ were meaningfully considered or if the decision has cost/security consequences.
 
 ---
 
+## 2026-07-13: AWS provider 6.x migration deferred; Dependabot ignores major bumps
+
+Dependabot opened a PR bumping the AWS provider from 5.100.0 to 6.54.0. The repo pins
+`~> 5.0`, and 6.x is a major release with breaking changes (resource schema and default
+behaviour changes). Taking that as an automated weekly PR would repeatedly break CI and
+risk silent behavioural drift. The decision: stay on 5.x for Sprint 1 and 2, and do the
+6.x migration deliberately later as its own reviewed piece of work (read the upgrade guide,
+run `terraform plan` against every module, verify no drift). To stop the PR reopening every
+week, `dependabot.yml` now ignores `version-update:semver-major` for `hashicorp/aws`; minor
+and patch 5.x updates continue to flow. The original Dependabot PR (#6) is closed with a
+reference to this rule.
+
+Owner: John.
+
+---
+
 ## 2026-07-13: DNSSEC deferred until NS delegation is proven stable (EXC-011)
 
 DNSSEC signing on a freshly delegated zone requires a DS record at the registrar. Setting
