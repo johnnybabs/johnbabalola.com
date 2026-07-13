@@ -33,4 +33,9 @@ output "cloudfront_domain_name" {
   value       = module.site.distribution_domain_name
 }
 
+output "github_deploy_role_arn" {
+  description = "IAM role ARN for the GitHub Actions OIDC deploy workflow (role-to-assume)."
+  value       = module.github_oidc.role_arn
+}
+
 # Further outputs added as modules are wired in (Task 8).
