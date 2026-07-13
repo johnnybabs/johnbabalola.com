@@ -4,6 +4,6 @@ terraform {
     key          = "johnbabalola.com/terraform.tfstate"
     region       = "eu-west-2"
     encrypt      = true
-    use_lockfile = true  # S3-native locking (Terraform >= 1.10); replaces dynamodb_table
+    use_lockfile = true # S3-native locking (Terraform >= 1.10); replaces dynamodb_table
   }
 }

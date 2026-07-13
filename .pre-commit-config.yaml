@@ -13,8 +13,11 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
-        args:
-          - --args=-backend=false
+        # Child modules declare provider configuration_aliases (aws.us_east_1)
+        # supplied by the root, so they cannot be validated standalone. They are
+        # fully validated through the infra/ root configuration, which composes
+        # them with providers resolved.
+        exclude: ^infra/modules/
       - id: terraform_tflint
         args:
           - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
