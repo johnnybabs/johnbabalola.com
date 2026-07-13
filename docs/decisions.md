@@ -16,6 +16,19 @@ Owner: John.
 
 ---
 
+## 2026-07-13: S3 backend uses use_lockfile instead of dynamodb_table
+
+`dynamodb_table` is deprecated in Terraform 1.10+. `use_lockfile = true` uses S3
+conditional writes (`if-none-match`) for state locking, which requires versioning on
+the bucket (already enabled) and no additional resources. The DynamoDB table
+(`johnnybabs-terraform-locks`) was created in bootstrap and is retained as infrastructure
+but is no longer wired to the S3 backend. It costs $0 at PAY_PER_REQUEST with no
+operations and can be used by future projects that pin to Terraform < 1.10.
+
+Owner: John.
+
+---
+
 ## 2026-07-13: Terraform state bootstrap uses local state by design
 
 The state bucket cannot store its own creation state — the classic

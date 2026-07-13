@@ -78,6 +78,64 @@ unexpected writes.
 
 ---
 
+## EXC-007: DynamoDB lock table uses AWS-managed SSE, not CMK (CKV_AWS_119)
+
+**Requirement:** CKV_AWS_119 — DynamoDB tables encrypted with a customer-managed KMS key.
+**Reason:** AWS-managed SSE (`enabled = true` without a key ARN) is the Tier 2 lab baseline
+per `02_DevSecOps_Engineering_Standards.md` ("AWS-managed keys are the lab baseline"). One CMK
+demonstration with annual rotation and CloudTrail key-usage logging is implemented in Project C
+(the Secrets Manager secret), satisfying the pattern at portfolio scale. A CMK for the Terraform
+lock table adds ~$1/month (KMS key cost) with no meaningful security improvement in a solo lab.
+**Tier:** 2 (demonstrated in Project C; lab baseline acceptable here).
+**Checkov skip:** `#checkov:skip=CKV_AWS_119` in `infra/bootstrap/main.tf`.
+**Expiry:** 2027-07-13.
+
+---
+
+## EXC-008: S3 buckets use AWS-managed SSE, not CMK (CKV_AWS_145)
+
+**Requirement:** CKV_AWS_145 — S3 buckets encrypted with a customer-managed KMS key.
+**Reason:** Same rationale as EXC-007. AWS-managed AES256 SSE is the Tier 2 lab baseline.
+Applies to the state bucket (`johnnybabs-tf-state`) and its access-log bucket. A CMK for
+Terraform state or access logs adds cost and operational complexity (key rotation, key policy
+maintenance) with no security improvement in a context where the data is internal infrastructure
+state with no PII or secrets.
+**Tier:** 2 (demonstrated in Project C; lab baseline acceptable here).
+**Checkov skip:** `#checkov:skip=CKV_AWS_145` in `infra/bootstrap/main.tf` on both S3 bucket resources.
+**Expiry:** 2027-07-13.
+
+---
+
+## EXC-009: S3 buckets do not have cross-region replication (CKV_AWS_144)
+
+**Requirement:** CKV_AWS_144 — S3 bucket cross-region replication enabled.
+**Reason:** Cross-region replication of Terraform state costs approximately $0.02–0.05/month
+per GB transferred, adds a replication IAM role, and doubles the storage cost. For a solo
+portfolio lab with a £50/month budget ceiling, this is Tier 3: documented design only.
+In production, Terraform state replication to a DR region would be implemented with a
+replication rule and a destination bucket in a second region. RTO for state loss in this
+project: re-run `infra/bootstrap/`, worst case 30 minutes.
+**Tier:** 3 (documented design — not implemented).
+**Checkov skip:** `#checkov:skip=CKV_AWS_144` in `infra/bootstrap/main.tf` on both S3 bucket resources.
+**Expiry:** 2027-07-13.
+
+---
+
+## EXC-010: S3 buckets do not have event notifications enabled (CKV2_AWS_62)
+
+**Requirement:** CKV2_AWS_62 — S3 buckets should have event notifications enabled.
+**Reason:** Event notifications on the Terraform state bucket and the access-log bucket would
+route to an SNS topic or Lambda for near-real-time change alerting. For a static portfolio with
+CloudTrail enabled account-wide, every S3 API call is already audited. Adding event notifications
+on the state bucket duplicates CloudTrail coverage at extra cost and operational overhead.
+Event notifications on the site bucket (future) are covered by EXC-005 (content integrity
+monitoring). Tier 3 for state and log buckets.
+**Tier:** 3 (documented design — not implemented; CloudTrail substitutes).
+**Checkov skip:** `#checkov:skip=CKV2_AWS_62` in `infra/bootstrap/main.tf` on both S3 bucket resources.
+**Expiry:** 2027-07-13.
+
+---
+
 ## Adding a new exception
 
 Copy the template below. Do NOT merge a PR that adds a `skip-check` to
