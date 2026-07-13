@@ -1,0 +1,48 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+# .terraform.lock.hcl is intentionally committed (pins provider checksums)
+
+# Site build output
+site/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.env
+.env.*
+
+# Node (if Astro is adopted later; see docs/adr/0003-site-generator.md)
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.idea/
+
+# Private working documents — stay in local checkout, never push
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+01_Production_Repo_Standards.md
+02_DevSecOps_Engineering_Standards.md
+private/
+*.private.md
+
+# Bootstrap local state (managed outside remote backend by design)
+infra/bootstrap/.terraform/
+infra/bootstrap/terraform.tfstate
+infra/bootstrap/terraform.tfstate.backup
