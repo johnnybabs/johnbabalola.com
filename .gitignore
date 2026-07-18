@@ -13,6 +13,10 @@ override.tf.json
 # Site build output
 site/dist/
 
+# Scan raw JSON (large; human-readable HTML/MD reports are committed instead)
+docs/lighthouse/*.report.json
+docs/security/zap/*.json
+
 # Python
 __pycache__/
 *.py[cod]

@@ -1,0 +1,165 @@
+Unable to find image 'ghcr.io/zaproxy/zaproxy:stable' locally
+stable: Pulling from zaproxy/zaproxy
+68629629b516: Pulling fs layer
+e7214010579b: Pulling fs layer
+df6b4100852a: Pulling fs layer
+a97078502c23: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+c0027f8934f6: Pulling fs layer
+1767b81f9310: Pulling fs layer
+4cabeb9f73c8: Pulling fs layer
+ed0a2937a253: Pulling fs layer
+453319a711c8: Pulling fs layer
+ea0e6e3c11d2: Pulling fs layer
+c39ca4def8aa: Pulling fs layer
+7606cae03f6e: Pulling fs layer
+1eaa7f59b81a: Pulling fs layer
+caafa78b7273: Pulling fs layer
+ec414bd46ce0: Pulling fs layer
+5eb2bf8c976e: Pulling fs layer
+53c9ad6c438a: Pulling fs layer
+03c1ecc3d88c: Pulling fs layer
+e91ff970ae05: Pulling fs layer
+4f4fb700ef54: Already exists
+1767b81f9310: Download complete
+5eb2bf8c976e: Download complete
+53c9ad6c438a: Download complete
+c0027f8934f6: Download complete
+4cabeb9f73c8: Download complete
+7606cae03f6e: Download complete
+1eaa7f59b81a: Download complete
+df6b4100852a: Download complete
+a97078502c23: Download complete
+453319a711c8: Download complete
+c39ca4def8aa: Download complete
+caafa78b7273: Download complete
+ec414bd46ce0: Download complete
+03c1ecc3d88c: Download complete
+68629629b516: Download complete
+e91ff970ae05: Download complete
+ed0a2937a253: Download complete
+68629629b516: Pull complete
+ea0e6e3c11d2: Download complete
+e7214010579b: Download complete
+e7214010579b: Pull complete
+a97078502c23: Pull complete
+e91ff970ae05: Pull complete
+c0027f8934f6: Pull complete
+df6b4100852a: Pull complete
+4f4fb700ef54: Pull complete
+4cabeb9f73c8: Pull complete
+ea0e6e3c11d2: Pull complete
+ed0a2937a253: Pull complete
+1767b81f9310: Pull complete
+453319a711c8: Pull complete
+7606cae03f6e: Pull complete
+1eaa7f59b81a: Pull complete
+caafa78b7273: Pull complete
+ec414bd46ce0: Pull complete
+5eb2bf8c976e: Pull complete
+53c9ad6c438a: Pull complete
+03c1ecc3d88c: Pull complete
+c39ca4def8aa: Pull complete
+Digest: sha256:8d387b1a63e3425beef4846e39719f5af2a787753af2d8b6558c6257d7a577a2
+Status: Downloaded newer image for ghcr.io/zaproxy/zaproxy:stable
+Using the Automation Framework
+Total of 7 URLs
+PASS: Vulnerable JS Library (Powered by Retire.js) [10003]
+PASS: In Page Banner Information Leak [10009]
+PASS: Cookie No HttpOnly Flag [10010]
+PASS: Cookie Without Secure Flag [10011]
+PASS: Cross-Domain JavaScript Source File Inclusion [10017]
+PASS: Content-Type Header Missing [10019]
+PASS: Anti-clickjacking Header [10020]
+PASS: X-Content-Type-Options Header Missing [10021]
+PASS: Information Disclosure - Debug Error Messages [10023]
+PASS: Information Disclosure - Sensitive Information in URL [10024]
+PASS: Information Disclosure - Sensitive Information in HTTP Referrer Header [10025]
+PASS: HTTP Parameter Override [10026]
+PASS: Information Disclosure - Suspicious Comments [10027]
+PASS: Off-site Redirect [10028]
+PASS: Cookie Poisoning [10029]
+PASS: User Controllable Charset [10030]
+PASS: User Controllable HTML Element Attribute (Potential XSS) [10031]
+PASS: Viewstate [10032]
+PASS: Directory Browsing [10033]
+PASS: Heartbleed OpenSSL Vulnerability (Indicative) [10034]
+PASS: Strict-Transport-Security Header [10035]
+PASS: Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s) [10037]
+PASS: X-Backend-Server Header Information Leak [10039]
+PASS: Secure Pages Include Mixed Content [10040]
+PASS: HTTP to HTTPS Insecure Transition in Form Post [10041]
+PASS: HTTPS to HTTP Insecure Transition in Form Post [10042]
+PASS: User Controllable JavaScript Event (XSS) [10043]
+PASS: Big Redirect Detected (Potential Sensitive Information Leak) [10044]
+PASS: X-ChromeLogger-Data (XCOLD) Header Information Leak [10052]
+PASS: Cookie without SameSite Attribute [10054]
+PASS: CSP [10055]
+PASS: X-Debug-Token Information Leak [10056]
+PASS: Username Hash Found [10057]
+PASS: X-AspNet-Version Response Header [10061]
+PASS: PII Disclosure [10062]
+PASS: Timestamp Disclosure [10096]
+PASS: Hash Disclosure [10097]
+PASS: Cross-Domain Misconfiguration [10098]
+PASS: Source Code Disclosure [10099]
+PASS: Weak Authentication Method [10105]
+PASS: Reverse Tabnabbing [10108]
+PASS: Modern Web Application [10109]
+PASS: Dangerous JS Functions [10110]
+PASS: Authentication Request Identified [10111]
+PASS: Session Management Response Identified [10112]
+PASS: Verification Request Identified [10113]
+PASS: Script Served From Malicious Domain (polyfill) [10115]
+PASS: ZAP is Out of Date [10116]
+PASS: Absence of Anti-CSRF Tokens [10202]
+PASS: Private IP Disclosure [2]
+PASS: Session ID in URL Rewrite [3]
+PASS: Script Passive Scan Rules [50001]
+PASS: Stats Passive Scan Rule [50003]
+PASS: Insecure JSF ViewState [90001]
+PASS: Java Serialization Object [90002]
+PASS: Sub Resource Integrity Attribute Missing [90003]
+PASS: Charset Mismatch [90011]
+PASS: Application Error Disclosure [90022]
+PASS: WSDL File Detection [90030]
+PASS: Loosely Scoped Cookie [90033]
+WARN-NEW: Re-examine Cache-control Directives [10015] x 4
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/cv.html (200 OK)
+	https://johnbabalola.com/projects.html (200 OK)
+WARN-NEW: Server Leaks Version Information via "Server" HTTP Response Header Field [10036] x 5
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/cv.html (200 OK)
+	https://johnbabalola.com/projects.html (200 OK)
+	https://johnbabalola.com/sitemap.xml (404 Not Found)
+WARN-NEW: Content Security Policy (CSP) Header Not Set [10038] x 5
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/projects.html (200 OK)
+	https://johnbabalola.com/robots.txt (404 Not Found)
+	https://johnbabalola.com/sitemap.xml (404 Not Found)
+WARN-NEW: Storable and Cacheable Content [10049] x 5
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/cv.html (200 OK)
+	https://johnbabalola.com/sitemap.xml (404 Not Found)
+	https://johnbabalola.com/style.css (200 OK)
+WARN-NEW: Retrieved from Cache [10050] x 2
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+WARN-NEW: Permissions Policy Header Not Set [10063] x 5
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/cv.html (200 OK)
+	https://johnbabalola.com/projects.html (200 OK)
+	https://johnbabalola.com/sitemap.xml (404 Not Found)
+WARN-NEW: Cross-Origin-Embedder-Policy Header Missing or Invalid [90004] x 13
+	https://johnbabalola.com (200 OK)
+	https://johnbabalola.com/ (200 OK)
+	https://johnbabalola.com/cv.html (200 OK)
+	https://johnbabalola.com/projects.html (200 OK)
+	https://johnbabalola.com (200 OK)
+FAIL-NEW: 0	FAIL-INPROG: 0	WARN-NEW: 7	WARN-INPROG: 0	INFO: 0	IGNORE: 0	PASS: 60
