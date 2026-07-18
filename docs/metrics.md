@@ -34,6 +34,12 @@ updated with earned keywords. Evidence in `docs/screenshots/`. Sprint 2 authoris
 | Metric | Value | Measured | Method |
 |---|---|---|---|
 | Push-to-live time | 37 s | 2026-07-18 | `deploy.yml` run 29649491160 — commit push timestamp to smoke-test pass, including a full `/*` CloudFront invalidation (~21 s) and edge propagation. Targeted invalidations (single changed page) are faster. |
-| Lighthouse performance (home) | — | — | Lighthouse CLI or DevTools |
-| Lighthouse accessibility (home) | — | — | Lighthouse CLI or DevTools |
+| Lighthouse performance (home) | 99 | 2026-07-18 | Lighthouse 12 CLI, live apex, skeleton content — FCP 1.1s, LCP 1.1s, TBT 130ms, CLS 0. Report: `docs/lighthouse/home.report.html` |
+| Lighthouse accessibility (home) | 100 | 2026-07-18 | Lighthouse 12 CLI |
+| Lighthouse best-practices (home) | 96 | 2026-07-18 | Lighthouse 12 CLI — expected to reach 100 once a CSP header is added (see ZAP findings) |
+| Lighthouse SEO (home) | 100 | 2026-07-18 | Lighthouse 12 CLI |
+| ZAP baseline | 0 fail, 1 medium (CSP), 5 low, 60 pass | 2026-07-18 | `zap-baseline.py` vs live apex — see `docs/security/zap-baseline-findings.md` |
 | Monthly cost (first full month) | — | — | AWS Cost Explorer |
+
+Lighthouse is measured on the home (skeleton) page; re-run on a case study once
+content lands, per the Sprint 2 DoD.
