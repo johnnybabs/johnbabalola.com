@@ -4,23 +4,57 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>John Babalola — Cloud DevOps Engineer</title>
-    <meta name="description" content="Portfolio of John Babalola, Cloud DevOps Engineer in the United Kingdom. Site under construction.">
+    <meta name="description" content="John Babalola, Cloud DevOps Engineer in the United Kingdom. Building on AWS with Terraform and CI/CD pipelines.">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <main>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="wrap">
+            <a class="brand" href="/">John Babalola</a>
+            <nav class="site-nav" aria-label="Primary">
+                <a href="/" aria-current="page">Home</a>
+                <a href="/projects.html">Projects</a>
+                <a href="/cv.html">CV</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
         <h1>John Babalola</h1>
         <p class="title">Cloud DevOps Engineer, United Kingdom</p>
+
         <p class="lede">
-            This site is being built in the open. It runs on AWS behind CloudFront,
-            provisioned with Terraform and deployed by a GitHub Actions OIDC pipeline.
-            The case studies and CV are on their way.
+            I build and run cloud infrastructure on AWS, defined in Terraform and
+            shipped through CI/CD pipelines. I care about the boring parts that keep
+            a system safe and cheap to run: least-privilege access, reproducible
+            builds, and clear runbooks. This site is one of those projects, built in
+            the open and documented as a case study.
         </p>
-        <p class="links">
-            <a href="https://github.com/johnnybabs">GitHub</a>
-            <a href="mailto:baabalola@gmail.com">Email</a>
-        </p>
+
+        <ul class="stack" aria-label="Core tools">
+            <li>AWS</li>
+            <li>Terraform</li>
+            <li>GitHub Actions</li>
+            <li>Docker</li>
+            <li>Linux</li>
+            <li>Python</li>
+        </ul>
+
+        <ul class="links">
+            <li><a href="https://github.com/johnnybabs">GitHub</a></li>
+            <li><a href="mailto:baabalola@gmail.com">Email</a></li>
+            <li><a href="/cv.html">CV</a></li>
+        </ul>
+
         <p class="eligibility">Eligible to work in the UK, no sponsorship required.</p>
     </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <span>© 2026 John Babalola</span>
+            <span>Built with AWS, CloudFront and Terraform. <a href="/projects.html">See how</a>.</span>
+        </div>
+    </footer>
 </body>
 </html>
