@@ -60,9 +60,12 @@ data "aws_iam_policy_document" "deploy" {
   }
 
   statement {
-    sid       = "InvalidateDistribution"
-    effect    = "Allow"
-    actions   = ["cloudfront:CreateInvalidation"]
+    sid    = "InvalidateDistribution"
+    effect = "Allow"
+    # CreateInvalidation issues the invalidation; GetInvalidation lets the
+    # pipeline poll it to completion (aws cloudfront wait) so push-to-live
+    # includes edge propagation. Both are scoped to this one distribution.
+    actions   = ["cloudfront:CreateInvalidation", "cloudfront:GetInvalidation"]
     resources = [var.distribution_arn]
   }
 }

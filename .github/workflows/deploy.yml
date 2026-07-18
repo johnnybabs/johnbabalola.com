@@ -79,17 +79,26 @@ jobs:
             exit 0
           fi
 
-          # Map each changed source file to its served path(s).
+          # Map each changed source file to its served path(s). Skip anything
+          # the build did not emit into dist/ (build.sh, docs), so we never
+          # invalidate a path that is not served.
           paths=""
           while IFS= read -r f; do
             [ -z "$f" ] && continue
-            rel="${f#site/}"          # strip the source prefix
+            rel="${f#site/}"                 # strip the source prefix
+            [ -f "site/dist/$rel" ] || continue
             case "$rel" in
               index.html) paths="$paths /";;               # root object
-              *.html)     paths="$paths /$rel";;
-              *)          paths="$paths /$rel";;            # images, etc.
+              *)          paths="$paths /$rel";;            # pages, images, etc.
             esac
           done <<< "$changed"
+
+          # If nothing served changed, there is nothing to invalidate.
+          if [ -z "$(echo $paths | tr -d ' ')" ]; then
+            echo "paths=/*" >> "$GITHUB_OUTPUT"
+            echo "Full invalidation (no served path resolved from diff)."
+            exit 0
+          fi
 
           # Deduplicate and cap; too many paths -> just wildcard.
           uniq=$(echo $paths | tr ' ' '\n' | grep -v '^$' | sort -u)
