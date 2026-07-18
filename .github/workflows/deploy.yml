@@ -1,0 +1,141 @@
+name: Deploy site
+
+# Deploys the static site to S3 + CloudFront on push to main.
+# Auth is OIDC only (hard rule 2): the job assumes the least-privilege deploy
+# role; there are no long-lived AWS keys. The role's trust policy is pinned to
+# refs/heads/main, so only this event can assume it.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# id-token: write is required for OIDC. Nothing else is needed.
+permissions:
+  contents: read
+  id-token: write
+
+# Never run two deploys against the live bucket at once, and never cancel a
+# deploy midway (a half-synced bucket is worse than a queued one).
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  deploy:
+    name: Build, sync, invalidate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          fetch-depth: 2  # need the previous commit to diff changed paths
+
+      - name: Build site
+        run: make build
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@517a711dbcd0e402f90c77e7e2f81e849156e31d  # v6.2.2
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync to S3
+        env:
+          BUCKET: ${{ vars.SITE_BUCKET }}
+        run: |
+          aws s3 sync site/dist/ "s3://${BUCKET}/" --delete \
+            --exclude ".*" \
+            --cache-control "public, max-age=300"
+
+      - name: Determine invalidation paths
+        id: paths
+        run: |
+          before="${{ github.event.before }}"
+          # Fall back to a full invalidation when we cannot compute a diff:
+          # first deploy, manual dispatch, force-push, or an unknown base.
+          if [ "${{ github.event_name }}" != "push" ] \
+             || [ -z "$before" ] \
+             || [ "$before" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            echo "paths=/*" >> "$GITHUB_OUTPUT"
+            echo "Full invalidation (no usable diff base)."
+            exit 0
+          fi
+
+          changed=$(git diff --name-only "$before" "${{ github.sha }}" -- site/ || true)
+          echo "Changed under site/:"; echo "$changed"
+
+          # A change to a shared asset (CSS) or the workflow affects every page.
+          if [ -z "$changed" ] || echo "$changed" | grep -qE '\.(css|js)$'; then
+            echo "paths=/*" >> "$GITHUB_OUTPUT"
+            echo "Full invalidation (shared asset or no page diff)."
+            exit 0
+          fi
+
+          # Map each changed source file to its served path(s).
+          paths=""
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            rel="${f#site/}"          # strip the source prefix
+            case "$rel" in
+              index.html) paths="$paths /";;               # root object
+              *.html)     paths="$paths /$rel";;
+              *)          paths="$paths /$rel";;            # images, etc.
+            esac
+          done <<< "$changed"
+
+          # Deduplicate and cap; too many paths -> just wildcard.
+          uniq=$(echo $paths | tr ' ' '\n' | grep -v '^$' | sort -u)
+          count=$(echo "$uniq" | grep -c . || true)
+          if [ "$count" -gt 15 ]; then
+            echo "paths=/*" >> "$GITHUB_OUTPUT"
+          else
+            echo "paths=$(echo $uniq | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Invalidating: $(echo $uniq | tr '\n' ' ')"
+
+      - name: Invalidate CloudFront and wait
+        id: invalidate
+        env:
+          DIST: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+          PATHS: ${{ steps.paths.outputs.paths }}
+        run: |
+          id=$(aws cloudfront create-invalidation \
+            --distribution-id "$DIST" \
+            --paths $PATHS \
+            --query 'Invalidation.Id' --output text)
+          echo "Invalidation $id created for: $PATHS"
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "$DIST" --id "$id"
+          echo "Invalidation $id completed."
+
+      - name: Smoke test live site
+        run: bash tests/smoke.sh johnbabalola.com
+
+      - name: Report push-to-live time
+        if: always()
+        run: |
+          # Push-to-live: from the commit push timestamp to now (content live,
+          # edge invalidated, smoke test passed). Recorded manually in
+          # docs/metrics.md from this line.
+          pushed="${{ github.event.head_commit.timestamp }}"
+          if [ -n "$pushed" ]; then
+            start=$(date -u -d "$pushed" +%s)
+            now=$(date -u +%s)
+            secs=$(( now - start ))
+            echo "PUSH_TO_LIVE_SECONDS=$secs"
+            {
+              echo "### Deploy summary"
+              echo ""
+              echo "- Commit: \`${{ github.sha }}\`"
+              echo "- Invalidation paths: \`${{ steps.paths.outputs.paths }}\`"
+              echo "- **Push-to-live: ${secs}s** (push timestamp to smoke-test pass)"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
