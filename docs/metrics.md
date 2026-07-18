@@ -38,7 +38,7 @@ updated with earned keywords. Evidence in `docs/screenshots/`. Sprint 2 authoris
 | Lighthouse accessibility (home) | 100 | 2026-07-18 | Lighthouse 12 CLI |
 | Lighthouse best-practices (home) | 96 | 2026-07-18 | Lighthouse 12 CLI — expected to reach 100 once a CSP header is added (see ZAP findings) |
 | Lighthouse SEO (home) | 100 | 2026-07-18 | Lighthouse 12 CLI |
-| ZAP baseline | 0 fail, 1 medium (CSP), 5 low, 60 pass | 2026-07-18 | `zap-baseline.py` vs live apex — see `docs/security/zap-baseline-findings.md` |
+| ZAP baseline | 0 fail, 0 medium, 4 low/info (accepted), 63 pass | 2026-07-18 | `zap-baseline.py` vs live apex. Initial scan found 1 medium (CSP) + 4 header lows; remediated via CloudFront headers and confirmed by re-scan. See `docs/security/zap-baseline-findings.md` |
 | Monthly cost (first full month) | — | — | AWS Cost Explorer |
 
 Lighthouse is measured on the home (skeleton) page; re-run on a case study once

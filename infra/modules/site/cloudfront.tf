@@ -41,6 +41,39 @@ resource "aws_cloudfront_response_headers_policy" "security" {
       referrer_policy = "strict-origin-when-cross-origin"
       override        = true
     }
+    # Strict CSP for a static, no-JavaScript, same-origin site. default-src
+    # 'none' denies everything, then only the stylesheet, images and fonts
+    # from our own origin are allowed. Revisit if the CV PDF or a case study
+    # ever loads a cross-origin asset. Clears ZAP alert 10038.
+    content_security_policy {
+      content_security_policy = "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+      override                = true
+    }
+  }
+
+  # Headers without a first-class field in security_headers_config. These clear
+  # the remaining ZAP low-risk findings (permissions policy, COOP/COEP/CORP).
+  custom_headers_config {
+    items {
+      header   = "Permissions-Policy"
+      value    = "accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+      override = true
+    }
+    items {
+      header   = "Cross-Origin-Opener-Policy"
+      value    = "same-origin"
+      override = true
+    }
+    items {
+      header   = "Cross-Origin-Embedder-Policy"
+      value    = "require-corp"
+      override = true
+    }
+    items {
+      header   = "Cross-Origin-Resource-Policy"
+      value    = "same-origin"
+      override = true
+    }
   }
 }
 
