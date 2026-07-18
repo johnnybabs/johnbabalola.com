@@ -1,4 +1,4 @@
-.PHONY: dev-setup init plan apply deploy destroy lint fmt validate test
+.PHONY: dev-setup init plan apply build deploy destroy lint fmt validate test
 
 TERRAFORM_DIR := infra
 
@@ -29,6 +29,9 @@ lint:
 
 test:
 	bash tests/smoke.sh
+
+build:
+	bash site/build.sh
 
 deploy:
 	@echo "Automated deploy runs via GitHub Actions on push to main."
