@@ -33,7 +33,7 @@ updated with earned keywords. Evidence in `docs/screenshots/`. Sprint 2 authoris
 
 | Metric | Value | Measured | Method |
 |---|---|---|---|
-| Push-to-live time | — | — | GitHub Actions log timestamp delta |
+| Push-to-live time | 37 s | 2026-07-18 | `deploy.yml` run 29649491160 — commit push timestamp to smoke-test pass, including a full `/*` CloudFront invalidation (~21 s) and edge propagation. Targeted invalidations (single changed page) are faster. |
 | Lighthouse performance (home) | — | — | Lighthouse CLI or DevTools |
 | Lighthouse accessibility (home) | — | — | Lighthouse CLI or DevTools |
 | Monthly cost (first full month) | — | — | AWS Cost Explorer |
