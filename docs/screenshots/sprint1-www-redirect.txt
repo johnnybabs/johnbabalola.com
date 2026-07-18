@@ -1,5 +1,8 @@
-# www -> apex redirect  —  captured 2026-07-13T21:22:55Z
+# www -> apex redirect  —  captured 2026-07-18T14:50:05Z (post-fix, function www_redirect applied)
 
 $ curl -sI https://www.johnbabalola.com
 HTTP/2 301
-location: https://johnbabalola.com/?
+server: CloudFront
+location: https://johnbabalola.com/
+
+# Location is now clean — no trailing '?'.
